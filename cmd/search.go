@@ -36,7 +36,7 @@ var searchCmd = &cobra.Command{
 			query += "WHERE" + strings.Join(conditions, "AND")
 		}
 
-		query += "ORDER BY ts DESC"
+		query += "ORDER BY ts"
 
 		rows, err := db.Query(query, parameters...)
 
