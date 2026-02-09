@@ -19,7 +19,7 @@ func ResultOutputShort(results []models.CmdEvent) {
 		fmt.Printf("\033[2m %-4d \033[0m \033[32m%-8s\033[0m  \033[2m%-20s\033[0m  \033[1m%s\033[0m\n",
 			ev.Id,
 			since,
-			prettyDir(ev.Dir),
+			prettyDir(ev.Dir, 24),
 			ev.Cmd,
 		)
 	}
@@ -36,22 +36,32 @@ func ResultOutputLong(results []models.CmdEvent) {
 			ev.Id,
 			absT,
 			ev.Shell,
-			prettyDir(ev.Dir),
+			prettyDir(ev.Dir, 24),
 			ev.Cmd,
 		)
 	}
 }
 
-func prettyDir(dir string) string {
+func prettyDir(dir string, width int) string {
 	if dir == "" {
-		return "-"
+		return fmt.Sprintf("%-*s", width, "-")
 	}
+
+	var out string
 
 	clean := filepath.Clean(dir)
 	split := strings.Split(clean, string(filepath.Separator))
+
 	if len(split) > 3 {
 		keep := split[len(split)-2:]
-		return "…" + string(filepath.Separator) + filepath.Join(keep...)
+		out = "…" + string(filepath.Separator) + filepath.Join(keep...)
+	} else {
+		out = dir
 	}
-	return dir
+
+	if len(out) > width {
+		out = out[:width]
+	}
+
+	return fmt.Sprintf("%-*s", width, out)
 }
