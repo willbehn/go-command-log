@@ -1,4 +1,4 @@
-# go-crumb
+# go-comman-log
 
 A lightweight command-line tool that records shell commands to a local SQLite database. This is a work in progress, but the goal is to offer som stats on your shell habits, and to make it easy to search for and use previous used commands. 
 
@@ -20,29 +20,29 @@ The CLI is created using golang with cobra, which is a first, so feel free to fo
 
 Clone the repository
 ```bash
-git clone https://github.com/yourname/go-crumb
+git clone https://github.com/yourname/go-command-log
 ```
 
 Build the binary 
 ```bash
-mkdir -p "<absolute-file-path>/go-crumb/bin" "<absolute-file-path>/go-crumb/database"
-cd "<absolute-file-path>/go-crumb"
-go build -o bin/crumb
+mkdir -p "<absolute-file-path>/go-command-log/bin" "<absolute-file-path>/go-command-log/database"
+cd "<absolute-file-path>/go-command-log"
+go build -o bin/commandlog
 ```
 
 ## Enable shell logging
 Add this to **~/.zshrc**:
 ```bash
 # Crumb
-export CRUMB_BIN="<absolute-file-path>go-crumb/bin/crumb"
-export CRUMB_DB="<absolute-file-path>/go-crumb/database/history.db"
+export CL_BIN="<absolute-file-path>go-command-log/bin/commandlog"
+export CL_DB="<absolute-file-path>/go-command-log/database/history.db"
 
-export PATH="<absolute-file-path>/go-crumb/bin:$PATH"
+export PATH="<absolute-file-path>/go-command-log/bin:$PATH"
 
-source "<absolute-file-path>/go-crumb/scripts/crumb-preexec.zsh"
+source "<absolute-file-path>/go-command-log/scripts/crumb-preexec.zsh"
 
 # (Optional) short alias
-alias cb=$CRUMB_BIN
+alias cl=$CL_BIN
 ```
 
 Then reload your shell:
@@ -53,12 +53,12 @@ source ~/.zshrc
 Run `crumb init` to initalise database with schema
 
 ```bash
-crumb init
+commandlog init
 ```
 
 ## Security and privacy
 
-- Database is stored at `$CRUMB_DB` and is **unencrypted**.
+- Database is stored at `$CL_DB` and is **unencrypted**.
 To avoid logging a command: start the line with a space, or add patterns to the ignore list in `scripts/crumb-preexec.zsh`.
 Consider adding `database/history.db` to your .gitignore.
 
