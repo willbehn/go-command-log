@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
 	"willbehn/ht/internal"
 	"willbehn/ht/models"
 
@@ -13,6 +14,20 @@ var recentCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Long:  `Fiks senere`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+
+		var recentCount int
+
+		if len(args) == 0 {
+			recentCount = 10
+		} else {
+			rc, parseErr := strconv.Atoi(args[0])
+			if parseErr != nil {
+				return fmt.Errorf("invalid count: %w", parseErr)
+			}
+			recentCount = rc
+		}
+
+		fmt.Println(recentCount)
 
 		db, err := internal.OpenDB()
 
@@ -28,11 +43,13 @@ var recentCmd = &cobra.Command{
 			return err
 		}
 
-		rows, err := tx.Query(`
+		query := `
 			SELECT id, cmd, shell, dir, repo, branch, ts, exit_code, duration_ms  
 			FROM commands
 			ORDER BY ts DESC
-			LIMIT 10`)
+			LIMIT ?`
+
+		rows, err := tx.Query(query, recentCount)
 
 		if err != nil {
 			tx.Rollback()
